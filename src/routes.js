@@ -10,7 +10,10 @@ export default function Routes() {
   return (
     <Stack.Navigator
       screenOptions={{
-        headerStyle: { backgroundColor: '#7159c1' },
+        headerStyle: {
+          shadowOpacity: 0,
+          backgroundColor: '#7159c1',
+        },
         headerTintColor: '#fff',
       }}>
       <Stack.Screen
