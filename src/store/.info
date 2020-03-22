@@ -1,0 +1,122 @@
+Dependencias
+
+yarn add ...
+
+redux
+redux-saga
+react-redux
+reactotron-redux
+reactotron-redux-saga
+immer
+
+
+
+Essa aplicação guarda informações de autenticação e do usuario por intermedio do redux.
+O objetivo é deixar essa informação acessivél para todos os componentes.
+
+
+Redux Saga.
+
+O Redux saga é um middleware entre o reducer e as actions creators. O propósito do seu uso é
+retirar tanto do reducer e principalmente da actions creators, reponsabilidades como
+requisições assincronas que deixa as funções impuras, imprevisiveis.
+
+Um ponto interessante para o uso do sagas é a facilidade de testar.
+
+Na pratica, o redux saga pode:
+
+- Receber uma action,
+- Ouvir a store
+- Disparar outras actions
+
+Um fluxo simples da utilização do sagas seria.
+
+O Componente dispara uma action creator, essa action despacha uma action type que será
+ouvida pelo saga. O saga usa o takeLasted ou o takeEvery para ouvir os disparos dessa action.
+Imediantamente, uma desses dois effects que citei acima, chama uma função responsavel por uma ação concreta.
+Digamos que essa "ação concreta" seja uma requisição a API. Note, que nesse momento, estamos no intermedio
+entre o disparo da action através da action creator, e a atualização da store por intermedio do reducer.
+Voltando, usamos o yield para interromper o fluxo da execução, aguardando receber uma resposta e sigo com a execução.
+Ali, podemos usar try catch para tratar as exceções de erro.
+Importante lembrar, que para acessar uma promisse usamos o "effects" call, sendo o primeiro paramerto o nome da função sem executa-la "()",
+no segunto os parametros que deve ser pasaados.
+O put é usado para disparar uma actions através do sagas :) e assim, passamos o payload nessessario ao reducer que irá atualizar a store.
+
+
+
+----------------->
+
+O grande barato de usar o immer é que podemos de maneira mais clara trabalhar com as contantes mudanças no reducer sem perder a imutabilidade. Como?
+
+Seguinte, o immmer possui uma função chamada producer, ela recebe no primeiro parametro o estado atual e no segundo uma função, callback. Essa função carrega em seu parametro um rascunho do estado atual, isso seguinifica que é preciso apenas alterar a propriedade em questão, não mais fazer aquele malabarismo onde primeiro se retorno o estado total, depois, altera só a propriedade em questão.
+
+
+Na pratica, esse processo deixa as coisas bem mais simples, mais claras. Imagina um reducer com varias e varias propriedades que podem ser alteradas,
+em algum momomento, podemos configurar de maneira errada a alteração que será feita ali e deixar um bug. Com o immer tudo fica mais claro e com menos código. Veja o exemplo, uma com normal, como fariamos e outra com immer.
+
+
+Reducer normal.
+
+
+const INITIAL_STATE = {
+  profile: {
+    name: '',
+    age: null,
+  },
+  auth: {
+    nickName: null,
+    token: ''
+  }
+}
+
+export default function userstate = INITIAL_STATE, action) => {
+  switch (action.type) {
+    case: '@user/GET_PROFILE':
+    profile: {
+      ...action.payload
+    }
+    break;
+    case: '@user/UPDATE_NAME':
+    profile: {
+      ...state.profile,
+      name: action.payload.name
+    }
+    break;
+    case: '@auth/SIGN_IN_SUCCESS':
+    profile: {
+      ...action.payload.auth
+    }
+    break;
+    case: '@user/UPDATE_TOKEN':
+    profile: {
+      ...state.auth,
+      name: action.payload.token
+    }
+    break;
+  }
+}
+
+
+
+Reducer com IMMER.
+
+
+export default function user(state = INITIAL_STATE, action) => {
+  producer(state, draft => {
+    switch (action.type) {
+      case: '@user/GET_PROFILE':
+      draft.profile: action.payload
+      break;
+      case: '@user/UPDATE_NAME':
+      draft.profile: action.payload.name
+      break;
+      case: '@user/@user/UPDATE_TOKEN':
+      draft.auth: action.payload.token
+      break;
+    }
+  })
+}
+
+
+
+
