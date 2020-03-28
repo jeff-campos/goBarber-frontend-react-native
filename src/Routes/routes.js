@@ -2,6 +2,7 @@ import Dashboard from '~/pages/Dashboard';
 import SignIn from '~/pages/SignIn';
 import SignUp from '~/pages/SignUp';
 import Profile from '~/pages/Profile';
+import New from './new';
 
 export default [
   {
@@ -20,6 +21,12 @@ export default [
     name: 'Dashboard',
     component: Dashboard,
     options: { title: 'Agendamentos' },
+    isPrivate: true,
+  },
+  {
+    name: 'New',
+    component: New,
+    options: { title: 'Agendar', tabBarVisible: false },
     isPrivate: true,
   },
   {

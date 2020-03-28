@@ -24,6 +24,8 @@ export default function Routes({ signed }) {
             iconName = 'event';
           } else if (route.name === 'Profile') {
             iconName = 'person';
+          } else if (route.name === 'New') {
+            iconName = 'add-circle-outline';
           }
 
           return <Icon name={iconName} size={size} color={color} />;
